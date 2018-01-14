@@ -68,7 +68,37 @@ public class Main2 {
 		return res;
 	}
 	
-
+	public static ArrayList<ProblemConfiguration> premierAlgoGlStoch(Corpus c, int n, Dictionary d){
+		
+		ArrayList<Text> texts = c.getTexts();
+		ArrayList<ProblemConfiguration> res = new ArrayList<>(texts.size());
+		
+		
+		int textNum = 0; // number of text -> indexes
+		
+		for (Text text: texts){
+			
+			int textLength = text.getLength();
+			ProblemConfiguration pc = new ProblemConfiguration(textLength, true, text);
+			res.add(textNum, null);
+			double max = -1;
+			for (int i = 0; i < n; i++){
+				
+				pc.makeChange(text);
+				pc.computeScore(text, d);
+				double current = pc.getScore();
+				if (max < current){
+					max = current;
+					System.out.println("Adding textNum... " + textNum);
+					res.set(textNum, pc);
+					pc = pc.getClone();
+				}
+				
+			}
+			textNum++;
+		}
+		return res;
+	}
 	/*
 	 * return configuration with max score for each text 
 	 * max score = 0
